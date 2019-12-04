@@ -12,12 +12,12 @@ import (
 
 //map for converting mysql type to golang types
 var typeForMysqlToGo = map[string]string{
-	"int":                "int",
-	"integer":            "int",
-	"tinyint":            "int",
-	"smallint":           "int",
-	"mediumint":          "int",
-	"bigint":             "int64",
+	"int":                "int64",
+	"integer":            "int64",
+	"tinyint":            "uint8",
+	"smallint":           "uint32",
+	"mediumint":          "uint32",
+	"bigint":             "uint64",
 	"int unsigned":       "int",
 	"integer unsigned":   "int",
 	"tinyint unsigned":   "int",
@@ -34,10 +34,10 @@ var typeForMysqlToGo = map[string]string{
 	"mediumtext":         "string",
 	"text":               "string",
 	"longtext":           "string",
-	"blob":               "string",
-	"tinyblob":           "string",
-	"mediumblob":         "string",
-	"longblob":           "string",
+	"blob":               "byte",
+	"tinyblob":           "byte",
+	"mediumblob":         "byte",
+	"longblob":           "byte",
 	"date":               "time.Time", // time.Time or string
 	"datetime":           "time.Time", // time.Time or string
 	"timestamp":          "time.Time", // time.Time or string
@@ -47,6 +47,7 @@ var typeForMysqlToGo = map[string]string{
 	"decimal":            "float64",
 	"binary":             "string",
 	"varbinary":          "string",
+	"json":               "string",
 }
 
 type Table2Struct struct {
@@ -69,7 +70,7 @@ type T2tConfig struct {
 	TagToLower       bool // tag的字段名字是否转换为小写, 如果本身有大写字母的话, 默认false不转
 	JsonTagToHump    bool // json tag是否转为驼峰，默认为false，不转换
 	UcFirstOnly      bool // 字段首字母大写的同时, 是否要把其他字母转换为小写,默认false不转换
-	SeperatFile      bool // 每个struct放入单独的文件,默认false,放入同一个文件
+	SeparateFile     bool // 每个struct放入单独的文件,默认false,放入同一个文件
 }
 
 func NewTable2Struct() *Table2Struct {
