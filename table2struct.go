@@ -62,6 +62,7 @@ type Table2Struct struct {
 	enableJsonTag  bool   // 是否添加json的tag, 默认不添加
 	packageName    string // 生成struct的包名(默认为空的话, 则取名为: package model)
 	tagKey         string // tag字段的key值,默认是orm
+	structSuffix   string
 }
 
 type T2tConfig struct {
@@ -242,6 +243,10 @@ func (t *Table2Struct) makeStructContent(tableRealName string, columns []column)
 	structName := tableName
 	if t.config.StructNameToHump {
 		structName = t.camelCase(structName)
+	}
+
+	if t.structSuffix != "" {
+		structName += t.structSuffix
 	}
 
 	switch len(tableName) {
