@@ -16,6 +16,7 @@ func parser() {
 	file := flag.String("file", "", "保存路径")
 	table := flag.String("table", "", "要迁移的表")
 	realNameMethod := flag.String("realNameMethod", "", "结构体对应的表名")
+	structSuffix := flag.String("structSuffix", "", "结构体后缀")
 	packageName := flag.String("packageName", "model", "生成的struct包名")
 	tagKey := flag.String("tagKey", "orm", "字段tag的key")
 	prefix := flag.String("prefix", "", "表前缀")
@@ -24,6 +25,7 @@ func parser() {
 	enableJsonTag := flag.Bool("enableJsonTag", false, "是否添加json的tag,默认false")
 	h := flag.Bool("h", false, "帮助")
 	help := flag.Bool("help", false, "帮助")
+	separateFile := flag.Bool("help", false, "按表名生成单独文件")
 
 	// 开始
 	flag.Parse()
@@ -44,6 +46,8 @@ func parser() {
 	t2t := converter.NewTable2Struct()
 	// 个性化配置
 	t2t.Config(&converter.T2tConfig{
+		// 结构体名称是否转为驼峰式，默认为false
+		StructNameToHump: true,
 		// 如果字段首字母本来就是大写, 就不添加tag, 默认false添加, true不添加
 		RmTagIfUcFirsted: false,
 		// tag的字段名字是否转换为小写, 如果本身有大写字母的话, 默认false不转
@@ -51,12 +55,14 @@ func parser() {
 		// 字段首字母大写的同时, 是否要把其他字母转换为小写,默认false不转换
 		UcFirstOnly: false,
 		//// 每个struct放入单独的文件,默认false,放入同一个文件(暂未提供)
-		//SeparateFile: false,
+		SeparateFile: *separateFile,
 	})
 	// 开始迁移转换
 	err := t2t.
 		// 指定某个表,如果不指定,则默认全部表都迁移
 		Table(*table).
+		// 结构体后缀
+		StructSuffix(*structSuffix).
 		// 表前缀
 		Prefix(*prefix).
 		// 是否添加json tag
